@@ -417,7 +417,6 @@
           }
           return cols
         }
-
         function _getColumn (col) {
           if (col.type === 'PK') {
             return {
