@@ -5,7 +5,7 @@ import Layout from '../components/layout/Layout'
 import Login from '../components/Login'
 // import GridView from '../components/layout/PageBar'
 
-import GeeGrid from '../components/grid/GeeGrid'
+import page from '../components/page/page'
 import AccountProfile from '../views/profile/Account'
 // const GridView = () => import('@/components/grid/FilterGrid.vue')
 
@@ -59,7 +59,7 @@ let routes = [
       requireAuth: true
     },
     children: [
-      {path: 'grid/:entity', component: GeeGrid},
+      {path: 'page/:moduleName/:pageCode', component: page},
       {path: 'profile/account', component: AccountProfile}
     ]
   },

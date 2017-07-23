@@ -383,12 +383,12 @@ let GM = new class GeeMeta {
   profile (jsonProfile) {
     if (arguments.length === 1) {
       if (jsonProfile) {
-        localStorage.setItem('geeMetaProfile', JSON.stringify(jsonProfile))
+        sessionStorage.setItem('geeMetaProfile', JSON.stringify(jsonProfile))
       } else {
-        localStorage.removeItem('geeMetaProfile')
+        sessionStorage.removeItem('geeMetaProfile')
       }
     } else if (arguments.length === 0) {
-      let value = localStorage.getItem('geeMetaProfile')
+      let value = sessionStorage.getItem('geeMetaProfile')
       if (value) {
         return JSON.parse(value)
       }
