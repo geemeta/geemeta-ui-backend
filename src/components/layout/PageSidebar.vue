@@ -77,6 +77,25 @@
         <li class="nav-item  ">
           <a href="javascript:;" class="nav-link nav-toggle">
             <i class="fa fa-connectdevelop"></i>
+            <span class="title">开发配置</span>
+            <span class="arrow"></span>
+          </a>
+          <ul class="sub-menu">
+            <li class="nav-item  ">
+              <a href="/#/m/designer" class="nav-link ">
+                <span class="title">UI设计</span>
+              </a>
+            </li>
+            <li class="nav-item  ">
+              <a href="/#/m/meta" class="nav-link ">
+                <span class="title">元数据管理</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item  ">
+          <a href="javascript:;" class="nav-link nav-toggle">
+            <i class="fa fa-connectdevelop"></i>
             <span class="title">系统管理</span>
             <span class="arrow"></span>
           </a>
@@ -87,7 +106,7 @@
               </a>
             </li>
             <li class="nav-item  ">
-              <a href="/#/m/grid/user" class="nav-link ">
+              <a href="/#/m/page/sys_user/sys_user_list?em=sys_user" class="nav-link ">
                 <span class="title">用户管理</span>
               </a>
             </li>

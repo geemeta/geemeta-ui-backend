@@ -56,6 +56,7 @@
 
   import utils from '../../common/utils'
   import datetime from '../base/datetime'
+
   export default {
     props: {
       opts: {
@@ -105,17 +106,17 @@
     },
     methods: {
       submit (e) {
-        console.log('this.model>', this.model)
+        console.log('model submit>', this.model)
         let result = {}
         for (var i in this.opts.fields) {
           let item = this.opts.fields[i]
           // ignore valid field value
-          if (this.model[item.field] === undefined || utils.trim(this.model[item.field] === '')) {
+          if (this.model[item.field] === undefined || utils.trim(this.model[item.field]) === '') {
             continue
           }
           result[item.field + '|' + item.cop] = this.model[item.field]
         }
-        console.log('result>', result)
+        console.log('构建成gql查询条件为 > ', result)
         this.$emit('input', result)
       },
       reset () {

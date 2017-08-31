@@ -10,6 +10,7 @@ import AccountProfile from '../views/profile/Account'
 // const GridView = () => import('@/components/grid/FilterGrid.vue')
 
 import GM from '../geemeta.js'
+
 Vue.use(VueRouter)
 
 // router.beforeEach((to, from, next) => {
@@ -60,7 +61,9 @@ let routes = [
     },
     children: [
       {path: 'page/:moduleName/:pageCode', component: page},
-      {path: 'profile/account', component: AccountProfile}
+      {path: 'profile/account', component: AccountProfile},
+      {path: 'designer', component: require('../views/geemeta/gm-desinger/index.vue')},
+      {path: 'meta', component: require('../views/geemeta/gm-meta/index.vue')}
     ]
   },
   {

@@ -176,17 +176,22 @@
                              width="100%">
                         <thead>
                         <tr>
-                          <th>
+                          <th v-if="!opts.content.list.select.type||opts.content.list.select.type=='checkbox'">
                             <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
                               <input type="checkbox" class="group-checkable" data-set="#geeGridOne .checkboxes"/>
                               <span></span>
                             </label>
                           </th>
-                          <th> 操作</th>
-                          <th> 名称</th>
-                          <th> 位置</th>
+                          <th v-if="opts.content.list.action">
+                            操作
+                          </th>
+                          <th v-for="col in columns">
+                            {{col.title}}
+                          </th>
                         </tr>
                         </thead>
+                        <tbody>
+                        </tbody>
                       </table>
                     </div>
                   </div>
@@ -200,12 +205,30 @@
       </div>
     </div>
     <!-- END CONTENT BODY -->
+    <!--注意 不可用fade类似的动画，即不能用class="modal fade"，该动画会导致 vue component中的mounted事件未能按预设执行-->
+    <div class="modal" tabindex="-1">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">标题</h4>
+      </div>
+      <div class="modal-body">
+        <component v-bind:is="modalView" :opts="modalOpts">
+        </component>
+      </div>
+      <div class="modal-footer">
+        <a href="#" data-dismiss="modal" class="btn btn-default">关闭</a>
+        <a href="#" class="btn btn-primary">保存</a>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+  /* eslint-disable no-eval */
+
   import utils from '../../common/utils'
   import api from '../../api/core'
   import formQuery from '../base/form-query'
+
   export default {
     props: {
       opts: {
@@ -219,6 +242,8 @@
             },
             info: '',
             list: {
+              select: {},
+              action: {},
               columns: []
             },
             stat: ''
@@ -232,7 +257,27 @@
     },
     data () {
       return {
-        mixQuery: {}
+        mixQuery: {},
+        columns: [],
+        lastGql: {},
+        tableRef: undefined,
+        modalView: undefined,
+        modalOpts: {}
+      }
+    },
+    beforeMount: function () {
+      let self = this
+      self.columns = _getColumns()
+
+//      console.log('self.columns>', self.columns)
+      function _getColumns () {
+        let cols = new Array(self.opts.content.list.columns.length)
+        for (let i in self.opts.content.list.columns) {
+          let col = self.opts.content.list.columns[i]
+          cols[i] = {'data': col.field, title: col.title}
+          cols[i].type = col.type
+        }
+        return cols
       }
     },
     mounted: function () {
@@ -240,6 +285,9 @@
       this._initTree()
     },
     methods: {
+      _isRowBtnDisable (row, expression) {
+        return 'disabled'
+      },
       _initTree () {
         if (this.opts.content.query.tree) {
           $('#geeTreeOne').jstree({
@@ -375,23 +423,61 @@
           // 请求的参数数据
           data: function (param) {
             console.debug('grid request data >', param)
-            let o = {}
-            o[self.query.em] = {
-              '@p': self.opts.content.query.p,
-              '@fs': utils.join(self.opts.content.list.columns, 'field', ',')
-            }
             // 动态设置url
             // table.api().ajax.url('http://localhost:8080/api/meta/list?draw=' + param.draw)
             table.api().ajax.url(api.url.getList(({draw: param.draw})))
-            return JSON.stringify(o)
+            return JSON.stringify(self._genGql(self.lastMixQueryData))
           },
           error: function (e) {
             console.debug('error >', e)
           }
         }
-        console.log('_getColumns() >', _getColumns())
-        tableBaseOptions.columns = _getColumns()
-        table.dataTable(tableBaseOptions)
+        tableBaseOptions.columns = []
+        $.extend(tableBaseOptions.columns, self.columns)
+        // add action column
+        tableBaseOptions.columns.unshift({
+//          sClass: '',
+          data: self.opts.content.list.select.field,
+          render: function (data, type, full, meta) {
+            console.log('meta>', meta)
+            console.log('data>', data)
+            let col = self.opts.content.list.action
+            // 一个动作
+            if (col.options.length === 1) {
+              // let obj = col.options[0]
+              // return '<li><a href="javascript:' + obj.click + '; class="btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
+            }
+            // 多个动作，展示成下拉项方式
+            let act = ''
+            for (let i in col.options) {
+              let obj = col.options[i]
+              let sDisable = self._isRowBtnDisable(table.api().row(meta.row).data(), obj.disable)
+              act += '<li><a ' + sDisable + ' data-gm-action="' + obj.click + '" data-gm-row="' + meta.row + '" class="gm-action btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
+            }
+            return '<div class="btn-group">' +
+              '<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 更多 ' +
+              ' <i class="fa fa-angle-down"></i>' +
+              '</button>' +
+              '<ul class="dropdown-menu" role="menu">' +
+              act +
+              '</ul>' +
+              '</div>'
+          },
+          bSortable: false
+        })
+        // add select column
+        tableBaseOptions.columns.unshift({
+          sClass: 'text-center',
+          data: self.opts.content.list.select.field,
+          render: function (data, type, full, meta) {
+            return '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">' +
+              '<input type="checkbox"  class="checkboxes"  value="' + data + '" />' +
+              '<span></span>' +
+              '</label>'
+          },
+          bSortable: false
+        })
+        self.tableRef = table.dataTable(tableBaseOptions)
         table.find('.group-checkable').change(function () {
           var set = $(this).attr('data-set')
           var checked = $(this).is(':checked')
@@ -408,62 +494,59 @@
         table.on('change', 'tbody tr .checkboxes', function () {
           $(this).parents('tr').toggleClass('active')
         })
-
-        function _getColumns () {
-          let cols = new Array(self.opts.content.list.columns.length)
-          for (let i in self.opts.content.list.columns) {
-            let col = self.opts.content.list.columns[i]
-            cols[i] = _getColumn(col)
-          }
-          return cols
-        }
-        function _getColumn (col) {
-          if (col.type === 'PK') {
-            return {
-              'sClass': 'text-center',
-              'data': col.field,
-              'render': function (data, type, full, meta) {
-                return '<label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">' +
-                  '<input type="checkbox"  class="checkboxes"  value="' + data + '" />' +
-                  '<span></span>' +
-                  '</label>'
-              },
-              'bSortable': false
+//        table.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+//          console.log('Button ' + buttonApi.text() + ' was activated')
+//        })
+        // 自定义列操作事件
+        // table.on('click', 'tbody tr a.gm-action', function (e) {
+        table.find('tbody tr a.gm-action').each(function (btn) {
+          $(btn).on('click', function (e) {
+            let $act = $(e.target)
+            let action = utils.trim($act.attr('data-gm-action'))
+            let rowIndex = $act.attr('data-gm-row')
+            if (action.indexOf('javascript:') === 0) {
+              // 执行自定义脚本
+              eval(action.replace('javascript:', ''))
+            } else {
+              // 调用专用函数,如打开窗口
+              self[action](table.api().row(rowIndex).data())
             }
-          } else if (col.type === 'action' && col.options) {
-            return {
-//          'sClass': 'text-center',
-              'data': 'Action',
-              'render': function (data, type, full, meta) {
-                // 一个动作
-                if (col.options.length === 1) {
-                  // let obj = col.options[0]
-                  // return '<li><a href="javascript:' + obj.click + '; class="btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
-                }
-                // 多个动作，展示成下拉项方式
-//                let act = ''
-//                for (let i in col.options) {
-//                  let obj = col.options[i]
-//                  act += '<li><a href="javascript:' + obj.click + '; class="btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
-//                }
-                return '<div class="btn-group">' +
-                  '<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 更多 ' +
-                  ' <i class="fa fa-angle-down"></i>' +
-                  '</button>' +
-                  '<ul class="dropdown-menu" role="menu">' +
-//                  act +
-                  '</ul>' +
-                  '</div>'
-              },
-              'bSortable': false
-            }
-          } else {
-            return {'data': col.field, title: col.title}
+          })
+          $(btn).addClass('')
+        })
+        // 初始化操作按钮
+        $(self.$el).find('#btn_new').click(function () {
+          self.modalView = require('../base/tab-view.vue')
+          $(self.$el).find('.modal').modal()
+        })
+      },
+      _genGql (queryData) {
+        // 构建gql
+        let root = {}
+        if (queryData) {
+          for (let i in queryData) {
+            root[i] = queryData[i]
           }
         }
+        let fsAry = []
+        for (let i in this.opts.content.list.columns) {
+          let col = this.opts.content.list.columns[i]
+          fsAry.push(col.field)
+        }
+        root['@fs'] = fsAry.join(',')
+        root['@order'] = this.opts.content.list.order
+        root['@p'] = this.opts.content.list.p
+        let gql = {}
+        gql[this.query.em] = root
+        console.log('创建的gql > ', gql)
+        return gql
       },
       handleMixQuery (data) {
-        console.log('this.mixQuery e>', data)
+        this.lastMixQueryData = data
+        this.tableRef.api().draw()
+      },
+      open (data) {
+        console.log('vue open method>', data)
       }
     },
     components: {formQuery}
