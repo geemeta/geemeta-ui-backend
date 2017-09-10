@@ -12,7 +12,7 @@
               </a>
               <ul class="dropdown-menu btn-xs">
                 <li>
-                  <a href="javascript:;"><i class="fa fa-folder">&nbsp;</i>新建项目</a>
+                  <a href="javascript:;" @click="newProject"><i class="fa fa-folder">&nbsp;</i>新建项目</a>
                 </li>
                 <li>
                   <a href="javascript:;"><i class="fa fa-folder-open">&nbsp;</i>打开项目</a>
@@ -24,7 +24,7 @@
                   <a href="javascript:;"><i class="fa fa-pie-chart">&nbsp;</i>新建报表</a>
                 </li>
               </ul>
-              <a class="btn btn-xs">保存</a>
+              <a class="btn btn-xs" @click="savePage">保存</a>
               <a class="btn btn-xs">预览</a>
             </div>
           </div>
@@ -42,7 +42,7 @@
               </ul>
               <div class="tab-content">
                 <div class="tab-pane tab-panedesigner-project active" id="d-tab-project">
-                  <project @openPage="onPageOpen"></project>
+                  <project :ds="ds.project" @openPage="onPageOpen" @newPage="onPageNew"></project>
                 </div>
                 <div class="tab-pane designer-toolbox" id="d-tab-designer">
                   <div id="designer-toolbox-dnd-tabs" class="tabbable tabbable-line">
@@ -103,7 +103,7 @@
           </div>
           <div class="col-md-8 xg-mix-no-mp" style="padding: 0px 0.5em">
             <div class="designer-stage">
-              <stage @setting="onSetting" :page="page"></stage>
+              <stage @setting="onSetting" @beforePageChange="beforePageChange" :page="page"></stage>
             </div>
           </div>
           <div class="col-md-2 xg-mix-no-mp">
@@ -127,7 +127,7 @@
                     <p></p>
                   </div>
                   <div class="tab-pane attributes" id="d-tab-attributes">
-                    <setting :options="settingOptions"></setting>
+                    <setting :options="settingOptions" @updated="onSettingUpdate"></setting>
                   </div>
                 </div>
               </div>
@@ -139,21 +139,30 @@
   </div>
 </template>
 <script>
+  //  import Vue from 'vue'
   import core from '../../../api/core'
-  import Project from './project'
-  import TableForm from './table-form'
-  import WebComponent from './web-component.vue'
-  import Layout from './layout'
-  import Control from './control'
+  import Project from './toolbox-project'
+  import TableForm from './toolbox-table-form'
+  import WebComponent from './toolbox-web-component.vue'
+  import Layout from './toolbox-layout'
+  import Control from './toolbox-control'
   import Setting from './setting.vue'
-  import Page from './page'
-  import Field from './field'
+  import Page from './toolbox-page'
+  import Field from './toolbox-field'
   import Stage from './stage'
   import utils from '../../../common/utils'
+  import PageInfo from '../../../common/PageInfo'
+  import entityNames from '../../../api/entityNames'
+  //  import FileHtml5 from './file-template/html5'
 
   export default {
     data () {
       return {
+        ds: {
+          project: {id: ''}
+        },
+        pages: {},
+        files: {},
         settingOptions: {},
         page: {},
         pageDefine: {
@@ -169,47 +178,120 @@
     mounted: function () {
     },
     methods: {
+      newProject: function () {
+        let self = this
+        let project = {name: '新项目', tree: ''}
+        core.data.save(entityNames.platform.dev.project, project).then(function (res) {
+          project.id = res.data
+          self.ds.project = project
+          console.log('save project>', res.data)
+        })
+      },
+      savePage: function () {
+//        console.log('this.page>', this.page.template.outerHTML)
+//        let content = utils.CryptoJS.enc.Utf8.parse(this.page.template.outerHTML)
+//        let b64content = utils.CryptoJS.enc.Base64.stringify(content)
+//        console.log('base64:', b64content)
+        this.page.template = this.page.template.outerHTML || this.page.template
+//        console.log('pageClone>', pageClone)
+//        let data = {
+//          '@biz': 'x',
+//          'platform_page_config': {
+//            code: this.page.id,
+//            content: JSON.stringify(this.page)
+//          }
+//        }
+//        core.data.savePage(data).then(function (res) {
+//          console.log('savePage res>', res)
+//        })
+        core.data.save('platform_page_config', {
+          code: this.page.id,
+          content: JSON.stringify(this.page)
+        }).then(function (res) {
+          console.log('save res>', res)
+        })
+      },
       onSetting: function (data) {
-        console.log('setting...', data)
-        $(this.$el).find('#designer-toolbox-setting-tabs a[href="#d-tab-attributes"]').tab('show')
-        // 便于检测数据变化
-        data.actionId = utils.uuid(8)
-        this.settingOptions = data
+//        console.log('openSetting,data>', data)
+        this.openSetting(data)
+      },
+      onSettingUpdate: function (data) {
+        this.page.cfg = data.cfg
+//        console.log('onSettingUpdate this.page>', this.page)
+      },
+      beforePageChange: function (page) {
+        // 记录旧模板数据
+        if (page.id) {
+          this.pages[page.id].template = page.template
+        }
+      },
+      onPageNew: function (data) {
+        let self = this
+        // 加载页面配置 pageDefine
+        core.data.getFileTemplate(data.type).then(function (vueFile) {
+          console.log('vueFile>', vueFile)
+          self.pageDefine = vueFile.$el.cloneNode(true)
+          // 加载页面数据源，解析为最终渲染的内容
+          self.pages[data.id] = new PageInfo({
+            id: data.id,
+            template: self.pageDefine,
+            before: {
+              data: []
+            },
+            evnet: []
+          })
+          self.cachePage(data.id)
+        })
       },
       onPageOpen: function (data) {
         let self = this
-//        console.log('onPageOpen > ', data)
-        // 加载页面配置 pageDefine
-        core.data.getPageConfig2(data).then(function (res) {
+        if (!self.pages[data.id]) {
+          // 加载页面配置 pageDefine
+          core.data.getPageConfig2(data).then(function (res) {
 //          console.log('res', res)
-          self.pageDefine = res.data.define
-          // 加载页面数据源，解析为最终渲染的内容
-          self.page = {
-            id: utils.uuid(16),
-            template: self.pageDefine.template,
-            before: {
-              data: [{
-                age: [{
-                  groupCode: 'age',
-                  groupName: '年龄',
-                  code: 'ALL',
-                  name: '所有'
-                }, {
-                  groupCode: 'age',
-                  groupName: '年龄',
-                  code: '8TO18',
-                  name: '8-18'
-                }, {
-                  groupCode: 'age',
-                  groupName: '年龄',
-                  code: '19TO24',
-                  name: '19-24'
+            self.pageDefine = res.data.define
+            // 加载页面数据源，解析为最终渲染的内容
+            self.pages[data.id] = {
+              id: data.id,
+              template: self.pageDefine.template,
+              before: {
+                data: [{
+                  age: [{
+                    groupCode: 'age',
+                    groupName: '年龄',
+                    code: 'ALL',
+                    name: '所有'
+                  }, {
+                    groupCode: 'age',
+                    groupName: '年龄',
+                    code: '8TO18',
+                    name: '8-18'
+                  }, {
+                    groupCode: 'age',
+                    groupName: '年龄',
+                    code: '19TO24',
+                    name: '19-24'
+                  }]
                 }]
-              }]
-            },
-            evnet: []
-          }
-        })
+              },
+              evnet: []
+            }
+            self.cachePage(data.id)
+          })
+        } else {
+          self.cachePage(data.id)
+        }
+      },
+      cachePage: function (id) {
+        console.log(id, this.pages[id])
+        this.page = this.pages[id]
+      },
+      openSetting: function (data) {
+        $(this.$el).find('#designer-toolbox-setting-tabs a[href="#d-tab-attributes"]').tab('show')
+        var d = data || {}
+        // 改变actionId便于检测数据变化
+        d.actionSeq = utils.uuid(8)
+        this.settingOptions = d
       }
     },
     components: {Project, core, Layout, WebComponent, TableForm, Control, Setting, Page, Field, Stage}
@@ -439,7 +521,8 @@
   /***********reset***********/
   .xg-designer .actions.xg-actions-xs {
     background-color: #EBEBEB;
-    padding: 4px 10px
+    padding: 4px 10px;
+    margin-bottom: 1px;
   }
 
   /*.xg-designer .actions.xg-actions-xs > .btn-group > a {*/

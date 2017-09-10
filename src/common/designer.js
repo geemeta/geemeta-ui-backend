@@ -319,17 +319,21 @@ class Designer {
 
   doAction (action, $wrapEl, $appendedContent) {
     if (action === '设置') {
-      let meta = utils.eval($appendedContent.attr(options.attr.data.meta))
-      let cfg = {
-        id: $appendedContent.attr(options.attr.data.id),
-        meta: meta
-      }
-      instance.emit(instance.eventName.onSetting, instance.getHandler(meta.type).doSetting($appendedContent, cfg))
+      instance.doEmitSetting($appendedContent)
     } else if (action === '删除') {
       $wrapEl.remove()
     } else if (action === '复制') {
       console.log('复制>', $wrapEl)
     }
+  }
+
+  doEmitSetting ($appendedContent) {
+    let meta = utils.eval($appendedContent.attr(options.attr.data.meta))
+    let cfg = {
+      id: $appendedContent.attr(options.attr.data.id),
+      meta: meta
+    }
+    instance.emit(instance.eventName.onSetting, instance.getHandler(meta.type).doSetting($appendedContent, cfg))
   }
 
   emit (event, data) {
@@ -364,17 +368,14 @@ class Designer {
   }
 
   load (html) {
-    // let html = '<div class="portlet box green dnd-content" data-meta="{type:\'layout\'}" data-id="zsgxBWWT"><div class="portlet-title"><div class="caption"><i class="fa fa-gift"></i>Form Sample\n' +
-    //   '                </div> <div class="tools"><a href="javascript:;" class="collapse" data-original-title="" title=""></a> <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""></a> <a href="javascript:;" class="reload" data-original-title="" title=""></a> <a href="javascript:;" class="remove" data-original-title="" title=""></a></div></div> <div class="portlet-body form"><form action="#" class="form-horizontal"><div data-dnd-allow="table,layout,control" class="form-body dnd-target" data-id="rJTO9Hld4ftfIYHW"><div data-meta="{type:\'layout\'}" class="row xg-mix-no-mp dnd-content " data-id="GDhmmsxy"><div class="col-md-6"><div class="form-group"><label class="control-label col-md-4">First Name</label> <div class="col-md-8"><div data-dnd-allow="control,field" class="dnd-target" data-id="dVGTEgQr9GHS7AFg"></div></div></div></div> <div class="col-md-6"><div class="form-group has-error"><label class="control-label col-md-4">Last Name</label> <div class="col-md-8"><select name="foo" class="form-control input-sm"><option value="1">Option 1</option> <option value="1">Option 2</option> <option value="1">Option 3</option></select> <span class="help-block"> This field has error. </span></div></div></div></div><div data-v-715627ce="" class="row xg-mix-no-mp dnd-content" data-meta="{type:\'layout\'}" data-id="RCqhMAFx"><div data-v-715627ce="" class="col-md-5 column"><div data-v-715627ce="" data-dnd-allow="layout,table,control" class="dnd-target" data-id="w9sXjNfsoaA8cidv"></div></div> <div data-v-715627ce="" class="col-md-7 column"><div data-v-715627ce="" data-dnd-allow="layout,table,control" class="dnd-target" data-id="pmHTqBQ0xYjE9nQR"></div></div></div></div> <div class="form-actions"><div class="row"><div class="col-md-6"><div class="row"><div class="col-md-offset-3 col-md-9"><button type="submit" class="btn green">Submit</button> <button type="button" class="btn default">Cancel</button></div></div></div> <div class="col-md-6"></div></div></div></form></div></div>'
-    $(options.selector.designer).find(options.selector.stage).find(options.selector.target).html(html)
-    //
-    // let html = render()
-    // console.log('render result>', html)
+    let $dndTarget = $(options.selector.designer).find(options.selector.stage).children(options.selector.target).eq(0)
+    $dndTarget.html(html)
+    this.doEmitSetting($dndTarget.children())
   }
 
   render () {
     let $stage = $(options.selector.designer).find(options.selector.stage)
-    let pageHtml = $stage.find(options.selector.target).html()
+    let pageHtml = $stage.children(options.selector.target).html()
 
     function removeAttr (htmlString) {
       // remove ' data-v-xxx="" ' that created by vue
@@ -400,6 +401,9 @@ class LayoutHandler {
   }
 
   doSetting ($appendedContent, cfg) {
+    // console.log('doSetting', $appendedContent.find('.control-label'))
+    // cfg.value = $appendedContent.find('.control-label').text().replace('*', '')
+    cfg.content = $appendedContent[0]
     cfg.value = 'layout'
     return cfg
   }
@@ -419,7 +423,7 @@ class FieldHandler {
   }
 
   doSetting ($appendedContent, cfg) {
-    console.log('xxx', $appendedContent.find('.control-label'))
+    console.log('doSetting', $appendedContent.find('.control-label'))
     cfg.value = $appendedContent.find('.control-label').text().replace('*', '')
     cfg.content = $appendedContent[0]
     return cfg

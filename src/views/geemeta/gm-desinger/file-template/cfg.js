@@ -1,4 +1,15 @@
-export default class XGViewDesigner {
+class FileTemplate {
+  // constructor () {
+  // }
+
+  register (name, url) {
+
+  }
+
+  get () {
+
+  }
+
   cfg () {
     return {
       name: 'xg-view-designer',
@@ -10,9 +21,9 @@ export default class XGViewDesigner {
             {
               text: '新建文件',
               items: [
-              {text: '表单'},
-              {text: '工作流表单'},
-              {text: '报表'}
+                {text: '表单'},
+                {text: '工作流表单'},
+                {text: '报表'}
               ]
             }
           ]
@@ -45,3 +56,5 @@ export default class XGViewDesigner {
     }
   }
 }
+
+export default FileTemplate

@@ -6,24 +6,24 @@
         <div class="tabbable">
           <ul class="nav nav-tabs xg-mix-xs">
             <li class="active">
-              <a href="#tab-designer" data-toggle="tab">界面</a>
+              <a href="#d-tab-ui" data-toggle="tab">界面</a>
             </li>
             <li>
-              <a href="#tab-code" data-toggle="tab">代码</a>
+              <a href="#d-tab-code" data-toggle="tab">代码</a>
             </li>
           </ul>
           <div class="tab-content">
-            <div :class="['tab-pane','active','stage-ui',stageSelector]" id="tab-designer">
+            <div :class="['tab-pane','active','stage-ui',stageSelector]" id="d-tab-ui">
               <div class="dnd-target" data-dnd-allow="layout,table" style="border-color: #d8d8d8">
               </div>
             </div>
-            <div class="tab-pane stage-code" id="tab-code">
+            <div class="tab-pane stage-code" id="d-tab-code">
               code
             </div>
-            <div class="tab-pane stage-doc" id="tab-doc">
-              <h3>页面说明</h3>
-              <textarea rows="15"></textarea>
-            </div>
+            <!--<div class="tab-pane stage-doc" id="d-tab-doc">-->
+            <!--<h3>页面说明</h3>-->
+            <!--<textarea rows="15"></textarea>-->
+            <!--</div>-->
           </div>
         </div>
       </div>
@@ -37,7 +37,8 @@
   export default {
     props: {
       page: {
-        id: ''
+        id: '',
+        template: ''
       }
     },
     data () {
@@ -47,9 +48,12 @@
     },
     watch: {
       'page.id': function (val, oldVal) {
-//        console.log('this.page.template>', this.page.template)
+        // 切换页面前，输出当前页面的内容，便于保存
+        this.$emit('beforeChange', {id: oldVal, template: designer.render()})
+        // 切换页面
+        console.log(this.page.template)
         this.load(this.page.template)
-        console.log(val, oldVal)
+        $(this.$el).find('.nav a[href="#d-tab-ui"]').tab('show')
       }
     },
     mounted: function () {
@@ -64,7 +68,6 @@
         })
         designer.onBindControl(function (data) {
           console.log('onBindControl>', data)
-//        el.$emit('onBindControl', data)
         })
         $('.xg-designer-toolbar').mouseleave(function () {
           let $this = $(this)
@@ -77,7 +80,7 @@
   }
 
 </script>
-<style scoped>
+<style>
   .xg-form {
     min-height: 3em;
   }

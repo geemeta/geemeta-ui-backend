@@ -303,4 +303,8 @@
     display: none;
   }
 
+  blue {
+    color: blue;
+  }
+
 </style>

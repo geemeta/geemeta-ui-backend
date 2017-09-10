@@ -1,4 +1,5 @@
-/* eslint-disable no-unneeded-ternary */
+import CryptoJS from 'crypto-js'
+
 let utils = {}
 /**
  * param({k1: {k2: {k3: 'value'}}}), output: k1.k2.k3=value
@@ -45,7 +46,7 @@ utils.toBoolean = function (v) {
   if (typeof v === 'string' && 'false|0'.indexOf(utils.trim(v.toLowerCase())) !== -1) {
     return false
   } else {
-    return v ? true : false
+    return !!v
   }
 }
 
@@ -84,8 +85,13 @@ utils.uuid = function (len, radix) {
  * @param expression
  * @returns {*}
  */
-utils.eval = function (expression) {
+utils.eval = function (expression, ctx) {
   let Fn = Function
   return new Fn('return ' + expression)()
 }
+
+utils.CryptoJS = CryptoJS
+// let content = utils.CryptoJS.enc.Utf8.parse(str)
+// let b64content = utils.CryptoJS.enc.Base64.stringify(content)
+// utils.CryptoJS.enc.Base64.parse(b64content).toString(utils.CryptoJS.enc.Utf8)
 export default utils

@@ -272,7 +272,7 @@ let GM = new class GeeMeta {
     this.ctx = {
       url: {
         root: 'http://localhost:8080/',
-        api: '/http://localhost:8080/api/common/'
+        api: 'http://localhost:8080/api/common/'
         // root: window.location.origin + '/',
         // api: window.location.origin + '/api/common/'
         // module: window.location.origin + '/static/m/',
@@ -434,7 +434,7 @@ let GM = new class GeeMeta {
       $(renderTo).append(winOptions.content)
     } else if (winOptions.url) {
       console.debug('winOptions.url>', winOptions.url)
-      // 注意require的url是相对于当前文件xg.js的url
+      // 注意require的url是相对于当前文件js的url
       let app = require(`${winOptions.url}`)// 无`${}`的话会告警
       console.debug('require vue >', app)
       app.propsData = {

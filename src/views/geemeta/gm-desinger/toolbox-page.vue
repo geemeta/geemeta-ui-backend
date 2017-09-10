@@ -239,7 +239,7 @@
 
 <script>
   import dndHandler from '../../../common/dndHandler'
-  import toolbar from './toolbar'
+  import toolbar from './stage-toolbar'
 
   export default {
     data () {

@@ -25,3 +25,5 @@ new Vue({
 // Vue.config.errorHandler = function (err, vm) {
 //   // handle error
 // }
+
+$.fn.extend({findIncludeSelf: function (selector) { return this.find(selector).addBack(selector) }})

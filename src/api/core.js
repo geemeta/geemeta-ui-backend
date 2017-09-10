@@ -1,4 +1,5 @@
-import { ctx } from './config'
+import Vue from 'vue'
+import ctx from '../common/appContext'
 import utils from '../common/utils'
 // import jsonp from '../common/jsonp'
 
@@ -101,6 +102,144 @@ let core = {
           data: pageConfig
         })
       })
+    },
+    getFileTemplate: function (fileName) {
+      return new Promise((resolve, reject) => {
+        let lazyLoad = (fileName, resolve) => { require(['../views/geemeta/gm-desinger/file-template/' + fileName + '.vue'], resolve) }
+        lazyLoad(fileName, data => { resolve(new Vue(data).$mount()) })
+      })
+    },
+    getPageByCode: function (pageCode) {
+      let df = $.Deferred()
+      // gql查询语句
+      let gql = {
+        'platform_page_config': {
+          '@p': '1,1',
+          '@fs': 'id,code,content',
+          'code': pageCode
+        }
+      }
+      $.ajax(ctx.url.apiMetaList, {
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: false,
+        data: JSON.stringify(gql),
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          // 通常 textStatus 和 errorThrown 之中
+          // 只有一个会包含信息
+          var options = this // 调用本次AJAX请求时传递的options参数
+          console.error({
+            XMLHttpRequest: XMLHttpRequest,
+            textStatus: textStatus,
+            errorThrown: errorThrown,
+            options: options
+          })
+        },
+        success: function (data) {
+          console.log('request end>>', data)
+          df.resolve(data)
+          // if ($.isFunction(callback))callback(data)
+        }
+      })
+      return df.promise()
+    },
+    savePage: function (page) {
+      var df = $.Deferred()
+      $.ajax(ctx.url.apiMetaSave, {
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: false,
+        data: JSON.stringify(page),
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          // 通常 textStatus 和 errorThrown 之中
+          // 只有一个会包含信息
+          var options = this // 调用本次AJAX请求时传递的options参数
+          console.error({
+            XMLHttpRequest: XMLHttpRequest,
+            textStatus: textStatus,
+            errorThrown: errorThrown,
+            options: options
+          })
+        },
+        success: function (data) {
+          console.debug('request end>>', data)
+          df.resolve(data)
+          // if ($.isFunction(callback))callback(data)
+        }
+      })
+      return df.promise()
+    },
+    save: function (entityName, keyValues) {
+      let data = {
+        '@biz': 'x'
+      }
+      data[entityName] = keyValues
+      // $.extend(data[entityName], keyValues)
+      var df = $.Deferred()
+      $.ajax(ctx.url.apiMetaSave, {
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: false,
+        data: JSON.stringify(data),
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          // 通常 textStatus 和 errorThrown 之中
+          // 只有一个会包含信息
+          var options = this // 调用本次AJAX请求时传递的options参数
+          console.error({
+            XMLHttpRequest: XMLHttpRequest,
+            textStatus: textStatus,
+            errorThrown: errorThrown,
+            options: options
+          })
+        },
+        success: function (data) {
+          console.debug('request end>>', data)
+          df.resolve(data)
+          // if ($.isFunction(callback))callback(data)
+        }
+      })
+      return df.promise()
+    },
+    /**
+     * @param entityName e.g. platform_dev_project
+     * @param keyValues e.g. {id:1111111111111111,name:'xxx'}
+     * @param fieldNames e.g. id,name
+     */
+    queryOne: function (entityName, keyValues, fieldNames) {
+      let df = $.Deferred()
+      // gql查询语句
+      let gql = {}
+      gql[entityName] = {
+        '@fs': fieldNames || '*'
+      }
+      $.extend(gql[entityName], keyValues)
+      $.ajax(ctx.url.apiMetaList, {
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        processData: false,
+        data: JSON.stringify(gql),
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          // 通常 textStatus 和 errorThrown 之中
+          // 只有一个会包含信息
+          var options = this // 调用本次AJAX请求时传递的options参数
+          console.error({
+            XMLHttpRequest: XMLHttpRequest,
+            textStatus: textStatus,
+            errorThrown: errorThrown,
+            options: options
+          })
+        },
+        success: function (data) {
+          console.log('request end>>', data)
+          df.resolve(data)
+          // if ($.isFunction(callback))callback(data)
+        }
+      })
+      return df.promise()
     }
   },
   url: {

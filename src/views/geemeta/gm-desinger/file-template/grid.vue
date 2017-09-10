@@ -1,210 +1,203 @@
 <template>
-  <div class="page-content-wrapper">
-    <!-- BEGIN CONTENT BODY -->
-    <div class="page-content">
-      <!-- BEGIN PAGE HEADER-->
-      <!-- END PAGE HEADER-->
-      <div class="row">
-        <div class="col-md-12">
-          <!-- BEGIN GRID SIDEBAR -->
-          <div class="grid-ui">
-            <div class="grid-sidebar collapse in">
-              <div class="portlet light" v-if="opts.content.query.tree">
-                <div class="portlet-title">
-                  <div class="caption" data-toggle="collapse" data-target=".grid-filter-tree">
-                    <span class="caption-subject font-green-sharp bold uppercase" style="cursor: pointer">树型过滤 </span>
-                  </div>
-                </div>
-                <div class="portlet-body grid-filter-tree collapse in">
-                  <div id="geeTreeOne">
-                  </div>
+  <div data-meta="{type:'layout',ui:'grid'}" class=" dnd-content">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- BEGIN GRID SIDEBAR -->
+        <div class="grid-ui">
+          <div class="grid-sidebar collapse in">
+            <div class="portlet light" v-if="opts.content.query.tree">
+              <div class="portlet-title">
+                <div class="caption" data-toggle="collapse" data-target=".grid-filter-tree">
+                  <span class="caption-subject font-green-sharp bold uppercase" style="cursor: pointer">树型过滤 </span>
                 </div>
               </div>
-              <div class="portlet light" v-if="opts.content.query.filter">
-                <div class="portlet-title">
-                  <div class="caption" data-toggle="collapse" data-target=".grid-filter-list-content">
-                    <span class="caption-subject font-green-sharp bold uppercase" style="cursor: pointer">常用过滤 </span>
-                    <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
-                  </div>
-                  <div class="actions">
-                    <div class="btn-group">
-                      <a class="btn green btn-circle btn-outline btn-sm grid-filters-config" href="javascript:;"
-                         data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <i class="icon-settings"></i> &nbsp;
-                        <i class="fa fa-angle-down"></i>
-                      </a>
-                      <ul class="dropdown-menu pull-right">
-                        <li>
-                          <a href="javascript:;"> 从综合查询中创建 </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                          <a href="javascript:;">
-                            <span class="badge badge-danger"> 点击删除 </span> 普能用户 </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;">
-                            <span class="badge badge-danger"> 点击删除</span> 管理员 </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;">
-                            <span class="badge badge-danger"> 点击删除 </span> 外部用户</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                          <a href="javascript:;">
-                            删除所有常用过滤</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+              <div class="portlet-body grid-filter-tree collapse in">
+                <div id="geeTreeOne">
                 </div>
-                <div class="portlet-body grid-filter-list-content collapse in">
-                  <div class="grid-filter-list">
-                    <ul class="nav nav-stacked">
+              </div>
+            </div>
+            <div class="portlet light" v-if="opts.content.query.filter">
+              <div class="portlet-title">
+                <div class="caption" data-toggle="collapse" data-target=".grid-filter-list-content">
+                  <span class="caption-subject font-green-sharp bold uppercase" style="cursor: pointer">常用过滤 </span>
+                  <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
+                </div>
+                <div class="actions">
+                  <div class="btn-group">
+                    <a class="btn green btn-circle btn-outline btn-sm grid-filters-config" href="javascript:;"
+                       data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                      <i class="icon-settings"></i> &nbsp;
+                      <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                      <li>
+                        <a href="javascript:;"> 从综合查询中创建 </a>
+                      </li>
+                      <li class="divider"></li>
                       <li>
                         <a href="javascript:;">
-                          <span class="badge badge-danger"> 失效 </span> 普能用户 </a>
+                          <span class="badge badge-danger"> 点击删除 </span> 普能用户 </a>
                       </li>
                       <li>
                         <a href="javascript:;">
-                          <span class="badge badge-danger"> 失效</span> 管理员 </a>
+                          <span class="badge badge-danger"> 点击删除</span> 管理员 </a>
                       </li>
                       <li>
                         <a href="javascript:;">
-                          <span class="badge badge-danger"> 失效 </span> 外部用户</a>
+                          <span class="badge badge-danger"> 点击删除 </span> 外部用户</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="javascript:;">
+                          删除所有常用过滤</a>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div class="portlet light" v-if="opts.content.query.mix">
-                <div class="portlet-title">
-                  <div class="caption" data-toggle="collapse" data-target=".grid-filter-list-content-tags">
-                    <span class="caption-subject font-red bold uppercase">综合查询 </span>
-                  </div>
-                  <div class="actions">
-                    <a class="btn green btn-outline btn-sm" href="javascript:;">
-                      <i class="fa fa-search"></i>查询 </a>
-                    <a class="btn grey-salsa btn-outline btn-sm" href="javascript:;">
-                      重置 </a>
-                  </div>
-                </div>
-                <!--grid-filter-list-content grid-filter-list-content-tags-->
-                <div class="portlet-body form">
-                  <form-query :opts="opts.content.query.mix" v-model="mixQuery" @input="handleMixQuery"></form-query>
-                </div>
-              </div>
-            </div>
-            <!-- END GRID SIDEBAR -->
-            <!-- BEGIN GRID CONTENT -->
-            <div class="grid-content">
-              <div class="portlet light">
-                <!-- GRID HEAD -->
-                <div class="portlet-title">
-                  <div class="caption">
-                    <a href="javascript:;" class="btn btn-sm green" data-toggle="collapse"
-                       data-target=".grid-sidebar">
-                      <i class="fa fa-navicon fa-lg"></i>
-                    </a>
-                    <span class="caption-subject font-green-sharp bold uppercase">用户信息</span>
-                  </div>
-                  <div class="actions">
-
-                    <div class="btn-group">
-                      <button id="btn_new" class="btn green btn-circle btn-sm"> 新增
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                    <div class="btn-group">
-                      <button id="btn_delete" class="btn red btn-circle btn-sm"> 删除
-                        <i class="fa fa-remove"></i>
-                      </button>
-                    </div>
-                    <div class="btn-group">
-                      <a class="btn green btn-circle btn-sm" href="javascript:;" data-toggle="dropdown"
-                         data-hover="dropdown" data-close-others="true"> 导出
-                        <i class="fa fa-angle-down"></i>
-                      </a>
-                      <ul class="dropdown-menu pull-right">
-                        <li>
-                          <a href="javascript:;">
-                            <i class="fa fa-print"></i> Print </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;">
-                            <i class="fa fa-file-pdf-o"></i> Save as PDF </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;">
-                            <i class="fa fa-file-excel-o"></i> Export to Excel </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;"> New Task </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                          <a href="javascript:;"> Pending
-                            <span class="badge badge-danger"> 4 </span>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;"> Completed
-                            <span class="badge badge-success"> 12 </span>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="javascript:;"> Overdue
-                            <span class="badge badge-warning"> 9 </span>
-                          </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                          <a href="javascript:;"> Delete Project </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <!-- end GRID HEAD -->
-                <div class="portlet-body">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <!-- 去掉了table的display-->
-                      <table id="geeGridOne"
-                             class="table table-striped table-bordered table-hover table-checkable order-column"
-                             width="100%">
-                        <thead>
-                        <tr>
-                          <th v-if="!opts.content.list.select.type||opts.content.list.select.type=='checkbox'">
-                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                              <input type="checkbox" class="group-checkable" data-set="#geeGridOne .checkboxes"/>
-                              <span></span>
-                            </label>
-                          </th>
-                          <th v-if="opts.content.list.action">
-                            操作
-                          </th>
-                          <th v-for="col in columns">
-                            {{col.title}}
-                          </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+              <div class="portlet-body grid-filter-list-content collapse in">
+                <div class="grid-filter-list">
+                  <ul class="nav nav-stacked">
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge badge-danger"> 失效 </span> 普能用户 </a>
+                    </li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge badge-danger"> 失效</span> 管理员 </a>
+                    </li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge badge-danger"> 失效 </span> 外部用户</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <!-- END GRID CONTENT -->
+            <div class="portlet light" v-if="opts.content.query.mix">
+              <div class="portlet-title">
+                <div class="caption" data-toggle="collapse" data-target=".grid-filter-list-content-tags">
+                  <span class="caption-subject font-red bold uppercase">综合查询 </span>
+                </div>
+                <div class="actions">
+                  <a class="btn green btn-outline btn-sm" href="javascript:;">
+                    <i class="fa fa-search"></i>查询 </a>
+                  <a class="btn grey-salsa btn-outline btn-sm" href="javascript:;">
+                    重置 </a>
+                </div>
+              </div>
+              <!--grid-filter-list-content grid-filter-list-content-tags-->
+              <div class="portlet-body form">
+                <form-query :opts="opts.content.query.mix" v-model="mixQuery" @input="handleMixQuery"></form-query>
+              </div>
+            </div>
           </div>
+          <!-- END GRID SIDEBAR -->
+          <!-- BEGIN GRID CONTENT -->
+          <div class="grid-content">
+            <div class="portlet light">
+              <!-- GRID HEAD -->
+              <div class="portlet-title">
+                <div class="caption">
+                  <a href="javascript:;" class="btn btn-sm green" data-toggle="collapse"
+                     data-target=".grid-sidebar">
+                    <i class="fa fa-navicon fa-lg"></i>
+                  </a>
+                  <span class="caption-subject font-green-sharp bold uppercase">用户信息</span>
+                </div>
+                <div class="actions">
+                  <div class="btn-group">
+                    <button id="btn_new" class="btn green btn-circle btn-sm"> 新增
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                  <div class="btn-group">
+                    <button id="btn_delete" class="btn red btn-circle btn-sm"> 删除
+                      <i class="fa fa-remove"></i>
+                    </button>
+                  </div>
+                  <div class="btn-group">
+                    <a class="btn green btn-circle btn-sm" href="javascript:;" data-toggle="dropdown"
+                       data-hover="dropdown" data-close-others="true"> 导出
+                      <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                      <li>
+                        <a href="javascript:;">
+                          <i class="fa fa-print"></i> Print </a>
+                      </li>
+                      <li>
+                        <a href="javascript:;">
+                          <i class="fa fa-file-pdf-o"></i> Save as PDF </a>
+                      </li>
+                      <li>
+                        <a href="javascript:;">
+                          <i class="fa fa-file-excel-o"></i> Export to Excel </a>
+                      </li>
+                      <li>
+                        <a href="javascript:;"> New Task </a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="javascript:;"> Pending
+                          <span class="badge badge-danger"> 4 </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:;"> Completed
+                          <span class="badge badge-success"> 12 </span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:;"> Overdue
+                          <span class="badge badge-warning"> 9 </span>
+                        </a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="javascript:;"> Delete Project </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!-- end GRID HEAD -->
+              <div class="portlet-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- 去掉了table的display-->
+                    <table id="geeGridOne"
+                           class="table table-striped table-bordered table-hover table-checkable order-column"
+                           width="100%">
+                      <thead>
+                      <tr>
+                        <th v-if="!opts.content.list.select.type||opts.content.list.select.type=='checkbox'">
+                          <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                            <input type="checkbox" class="group-checkable" data-set="#geeGridOne .checkboxes"/>
+                            <span></span>
+                          </label>
+                        </th>
+                        <th v-if="opts.content.list.action">
+                          操作
+                        </th>
+                        <th v-for="col in columns">
+                          {{col.title}}
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END GRID CONTENT -->
         </div>
-        <!-- END PAGE CONTENT-->
       </div>
+      <!-- END PAGE CONTENT-->
     </div>
-    <!-- END CONTENT BODY -->
     <!--注意 不可用fade类似的动画，即不能用class="modal fade"，该动画会导致 vue component中的mounted事件未能按预设执行-->
     <div class="modal" tabindex="-1">
       <div class="modal-header">
@@ -223,11 +216,10 @@
   </div>
 </template>
 <script>
-  /* eslint-disable no-eval */
-
-  import utils from '../../common/utils'
-  import api from '../../api/core'
-  import formQuery from '../base/form-query'
+  import utils from '../../../../common/utils'
+  import api from '../../../../api/core'
+  import formQuery from '../file-template-support/grid-form-query'
+  import settingHandler from '../../../../common/SettingHandler'
 
   export default {
     props: {
@@ -236,6 +228,7 @@
         default: function () {
           return {
             content: {
+              em: '',
               query: {
                 tree: {},
                 filter: {},
@@ -251,10 +244,7 @@
             }
           }
         },
-        required: true
-      },
-      query: {
-        type: Object
+        required: false
       }
     },
     data () {
@@ -271,7 +261,6 @@
       let self = this
       self.columns = _getColumns()
 
-//      console.log('self.columns>', self.columns)
       function _getColumns () {
         let cols = new Array(self.opts.content.list.columns.length)
         for (let i in self.opts.content.list.columns) {
@@ -283,6 +272,16 @@
       }
     },
     mounted: function () {
+      settingHandler.register('grid', {
+        data: {
+          name: '.grid-ui>.grid-content .caption .caption-subject'
+        },
+        facade: {
+          icon: '.portlet-title>.caption>i',
+          class: '[data-meta*=\'portlet\']',
+          style: '[data-meta*=\'portlet\']'
+        }
+      })
       this._initTable()
       this._initTree()
     },
@@ -357,7 +356,7 @@
       },
       _initTable () {
         let self = this
-        if (!this.query.em) {
+        if (!this.opts.content.em) {
           console.error('url中必须有参数：em')
           return
         }
@@ -508,7 +507,7 @@
             let rowIndex = $act.attr('data-gm-row')
             if (action.indexOf('javascript:') === 0) {
               // 执行自定义脚本
-              eval(action.replace('javascript:', ''))
+              utils.eval(action.replace('javascript:', ''))
             } else {
               // 调用专用函数,如打开窗口
               self[action](table.api().row(rowIndex).data())
@@ -518,7 +517,7 @@
         })
         // 初始化操作按钮
         $(self.$el).find('#btn_new').click(function () {
-          self.modalView = require('../base/tab-view.vue')
+          self.modalView = require('../file-template-support/tab-view.vue')
           $(self.$el).find('.modal').modal()
         })
       },
@@ -539,7 +538,7 @@
         root['@order'] = this.opts.content.list.order
         root['@p'] = this.opts.content.list.p
         let gql = {}
-        gql[this.query.em] = root
+        gql[this.opts.content.em] = root
         console.log('创建的gql > ', gql)
         return gql
       },
@@ -554,6 +553,5 @@
     components: {formQuery}
   }
 </script>
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 </style>

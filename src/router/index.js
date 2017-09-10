@@ -62,7 +62,8 @@ let routes = [
     children: [
       {path: 'page/:moduleName/:pageCode', component: page},
       {path: 'profile/account', component: AccountProfile},
-      {path: 'designer', component: require('../views/geemeta/gm-desinger/index.vue')},
+      {path: 'designer', component: require('../views/geemeta/gm-desinger/editor.vue')},
+      {path: 'preview/:code', component: require('../views/geemeta/gm-desinger/preview.vue')},
       {path: 'meta', component: require('../views/geemeta/gm-meta/index.vue')}
     ]
   },

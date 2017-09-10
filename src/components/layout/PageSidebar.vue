@@ -87,6 +87,11 @@
               </a>
             </li>
             <li class="nav-item  ">
+              <a href="/#/m/preview" class="nav-link ">
+                <span class="title">UI预览</span>
+              </a>
+            </li>
+            <li class="nav-item  ">
               <a href="/#/m/meta" class="nav-link ">
                 <span class="title">元数据管理</span>
               </a>

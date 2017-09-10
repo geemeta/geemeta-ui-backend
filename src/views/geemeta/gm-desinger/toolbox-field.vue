@@ -18,7 +18,7 @@
                     <span class="dnd-title"><i class="fa fa-i-cursor" aria-hidden="true"></i><label>单行</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'singleText'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>单行</label></span>
                       <div class="col-md-9">
@@ -40,7 +40,7 @@
                     <span class="dnd-title"><i class="fa fa-edit" aria-hidden="true"></i><label>多行</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'multiText'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>多行</label></span>
                       <div class="col-md-9">
@@ -58,7 +58,7 @@
                     <span class="dnd-title"><i class="fa fa-calendar" aria-hidden="true"></i><label>日期</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'date'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>日期</label></span>
                       <div class="col-md-9">
@@ -82,7 +82,7 @@
                     <span class="dnd-title"><i class="fa fa-clock-o" aria-hidden="true"></i><label>时间</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'time'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>时间</label></span>
                       <div class="col-md-9">
@@ -104,7 +104,7 @@
                     <span class="dnd-title"><i class="fa fa-envelope" aria-hidden="true"></i><label>邮件</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'email'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><label>邮件</label><i class="required">*</i></span>
                       <div class="col-md-9">
@@ -126,7 +126,7 @@
                     <span class="dnd-title"><i class="fa fa-phone" aria-hidden="true"></i><label>电话</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'phone'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>电话</label></span>
                       <div class="col-md-9">
@@ -149,7 +149,7 @@
                                                aria-hidden="true"></i><label>单选</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'radio'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'radio'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>单选</label></span>
                       <div class="mt-radio-inline col-md-9">
@@ -180,7 +180,7 @@
                                                aria-hidden="true"></i><label>多选</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'checkbox'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'checkbox'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>多选</label></span>
                       <div class="col-md-9">
@@ -208,12 +208,13 @@
               <td colspan="12">
                 <div class="dnd-item">
                   <div class="dnd-dsc">
-                    <span class="dnd-title"><i class="fa fa-list" aria-hidden="true"></i><label>下拉列表</label></span>
+                    <span class="dnd-title"><i class="fa fa-list" aria-hidden="true"></i><label>下拉
+                    </label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
-                      <span class="control-label col-md-3"><label>下拉列表</label><i class="required">*</i></span>
+                      <span class="control-label col-md-3"><label>下拉</label><i class="required">*</i></span>
                       <div class="col-md-4">
                         <div class="input-group date date-picker" data-date-format="dd-mm-yyyy"
                              data-date-start-date="+0d">
@@ -232,12 +233,12 @@
               <td colspan="12">
                 <div class="dnd-item">
                   <div class="dnd-dsc">
-                    <span class="dnd-title"><i class="fa fa-clock-o" aria-hidden="true"></i><label>多选列表</label></span>
+                    <span class="dnd-title"><i class="fa fa-clock-o" aria-hidden="true"></i><label>多选</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
-                      <span class="control-label col-md-3"><label>多选列表</label><i class="required">*</i></span>
+                      <span class="control-label col-md-3"><label>多选</label><i class="required">*</i></span>
                       <div class="col-md-9">
                         <div class="input-group date-picker input-daterange" data-date="10/11/2012"
                              data-date-format="mm/dd/yyyy">
@@ -258,7 +259,7 @@
                                                aria-hidden="true"></i><label>图片</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><label>图片</label><i class="required">*</i></span>
                       <div class="col-md-4">
@@ -279,12 +280,12 @@
               <td colspan="12">
                 <div class="dnd-item">
                   <div class="dnd-dsc">
-                    <span class="dnd-title"><i class="fa fa-upload" aria-hidden="true"></i><label>上传文件</label></span>
+                    <span class="dnd-title"><i class="fa fa-upload" aria-hidden="true"></i><label>上传</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
-                      <span class="control-label col-md-3"><i class="required">*</i><label>上传文件</label></span>
+                      <span class="control-label col-md-3"><i class="required">*</i><label>上传</label></span>
                       <div class="col-md-9">
                         <div class="input-group date-picker input-daterange" data-date="10/11/2012"
                              data-date-format="mm/dd/yyyy">
@@ -304,7 +305,7 @@
                     <span class="dnd-title"><i class="fa fa-group" aria-hidden="true"></i><label>组织</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>组织</label></span>
                       <div class="col-md-4">
@@ -328,7 +329,7 @@
                     <span class="dnd-title"><i class="fa fa-user" aria-hidden="true"></i><label>人员</label></span>
                   </div>
                   <toolbar></toolbar>
-                  <div class="dnd-content" data-meta="{type:'field', field:'label'}">
+                  <div class="dnd-content" data-meta="{type:'field', ui:'label'}">
                     <div class="form-group">
                       <span class="control-label col-md-3"><i class="required">*</i><label>人员</label></span>
                       <div class="col-md-4">
@@ -368,7 +369,7 @@
 </template>
 <script>
   import dndHandler from '../../../common/dndHandler'
-  import toolbar from './toolbar'
+  import toolbar from './stage-toolbar'
 
   export default {
     data () {

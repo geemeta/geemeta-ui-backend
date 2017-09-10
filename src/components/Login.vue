@@ -395,7 +395,7 @@
             console.debug('success....login....', data)
             $vue.$GM.profile(data)
 //            $vue.$store.commit(types.LOGIN, data)
-            $vue.$router.push('/')
+            $vue.$router.push('/m/designer')
           })
         }
       }

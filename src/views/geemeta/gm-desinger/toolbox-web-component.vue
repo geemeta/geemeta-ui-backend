@@ -92,7 +92,7 @@
               <span class="dnd-title"><i class="fa fa-header" aria-hidden="true"></i><label>标题</label></span>
             </div>
             <toolbar></toolbar>
-            <div class="dnd-content" data-meta="{type:'control'}">
+            <div class="dnd-content" data-meta="{type:'control',ui:'form-section'}">
               <h3 class="form-section">标题</h3>
             </div>
           </div>
@@ -128,7 +128,8 @@
 
 <script>
   import dndHandler from '../../../common/dndHandler'
-  import toolbar from './toolbar'
+  import toolbar from './stage-toolbar'
+
   export default {
     data () {
       return {}
