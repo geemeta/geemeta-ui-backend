@@ -64,7 +64,7 @@
         designer.load(template)
         designer.init()
         designer.onSetting(function (data) {
-          el.$emit('setting', data)
+          el.$emit('openSetting', data)
         })
         designer.onBindControl(function (data) {
           console.log('onBindControl>', data)

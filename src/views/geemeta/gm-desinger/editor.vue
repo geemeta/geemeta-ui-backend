@@ -42,7 +42,8 @@
               </ul>
               <div class="tab-content">
                 <div class="tab-pane tab-panedesigner-project active" id="d-tab-project">
-                  <project :ds="ds.project" @openPage="onPageOpen" @newPage="onPageNew"></project>
+                  <project :ds="ds.project" @openPage="onProjectOpenPage"
+                           @newPage="onProjectNewPage"></project>
                 </div>
                 <div class="tab-pane designer-toolbox" id="d-tab-designer">
                   <div id="designer-toolbox-dnd-tabs" class="tabbable tabbable-line">
@@ -103,7 +104,7 @@
           </div>
           <div class="col-md-8 xg-mix-no-mp" style="padding: 0px 0.5em">
             <div class="designer-stage">
-              <stage @setting="onSetting" @beforePageChange="beforePageChange" :page="page"></stage>
+              <stage @openSetting="onSettingOpen" @beforeChange="onSettingBefore" :page="page"></stage>
             </div>
           </div>
           <div class="col-md-2 xg-mix-no-mp">
@@ -187,45 +188,24 @@
           console.log('save project>', res.data)
         })
       },
-      savePage: function () {
-//        console.log('this.page>', this.page.template.outerHTML)
-//        let content = utils.CryptoJS.enc.Utf8.parse(this.page.template.outerHTML)
-//        let b64content = utils.CryptoJS.enc.Base64.stringify(content)
-//        console.log('base64:', b64content)
-        this.page.template = this.page.template.outerHTML || this.page.template
-//        console.log('pageClone>', pageClone)
-//        let data = {
-//          '@biz': 'x',
-//          'platform_page_config': {
-//            code: this.page.id,
-//            content: JSON.stringify(this.page)
-//          }
-//        }
-//        core.data.savePage(data).then(function (res) {
-//          console.log('savePage res>', res)
-//        })
-        core.data.save('platform_page_config', {
-          code: this.page.id,
-          content: JSON.stringify(this.page)
-        }).then(function (res) {
-          console.log('save res>', res)
-        })
+      onSettingOpen: function (data) {
+        $(this.$el).find('#designer-toolbox-setting-tabs a[href="#d-tab-attributes"]').tab('show')
+        var d = data || {}
+        // 改变actionId便于检测数据变化
+        d.actionSeq = utils.uuid(8)
+        this.settingOptions = d
       },
-      onSetting: function (data) {
-//        console.log('openSetting,data>', data)
-        this.openSetting(data)
+      onSettingBefore: function (page) {
+        // 记录旧模板数据
+        if (page.extendId) {
+          this.pages[page.extendId].template = page.template
+        }
       },
       onSettingUpdate: function (data) {
         this.page.cfg = data.cfg
 //        console.log('onSettingUpdate this.page>', this.page)
       },
-      beforePageChange: function (page) {
-        // 记录旧模板数据
-        if (page.id) {
-          this.pages[page.id].template = page.template
-        }
-      },
-      onPageNew: function (data) {
+      onProjectNewPage: function (data) {
         let self = this
         // 加载页面配置 pageDefine
         core.data.getFileTemplate(data.type).then(function (vueFile) {
@@ -233,7 +213,7 @@
           self.pageDefine = vueFile.$el.cloneNode(true)
           // 加载页面数据源，解析为最终渲染的内容
           self.pages[data.id] = new PageInfo({
-            id: data.id,
+            extendId: data.id,
             template: self.pageDefine,
             before: {
               data: []
@@ -241,9 +221,10 @@
             evnet: []
           })
           self.cachePage(data.id)
+          self.savePage()
         })
       },
-      onPageOpen: function (data) {
+      onProjectOpenPage: function (data) {
         let self = this
         if (!self.pages[data.id]) {
           // 加载页面配置 pageDefine
@@ -282,16 +263,22 @@
           self.cachePage(data.id)
         }
       },
-      cachePage: function (id) {
-        console.log(id, this.pages[id])
-        this.page = this.pages[id]
+      savePage: function () {
+        let self = this
+        this.page.template = this.page.template.outerHTML || this.page.template
+        core.data.save(entityNames.platform.dev.pageConfig, {
+          id: this.page.id,
+          extendId: this.page.extendId,
+          code: this.page.id,
+          content: JSON.stringify(this.page)
+        }).then(function (res) {
+          self.page.id = res.data
+        })
       },
-      openSetting: function (data) {
-        $(this.$el).find('#designer-toolbox-setting-tabs a[href="#d-tab-attributes"]').tab('show')
-        var d = data || {}
-        // 改变actionId便于检测数据变化
-        d.actionSeq = utils.uuid(8)
-        this.settingOptions = d
+      cachePage: function (extendId) {
+        console.log('cachePage extendId>' + extendId + '>', this.pages[extendId])
+        this.page = this.pages[extendId]
+        this.page.extendId = extendId
       }
     },
     components: {Project, core, Layout, WebComponent, TableForm, Control, Setting, Page, Field, Stage}

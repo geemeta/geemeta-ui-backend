@@ -5,6 +5,7 @@
 </template>
 <script>
   import api from '../../api/core'
+
   export default {
     data () {
       return {
@@ -14,14 +15,22 @@
       }
     },
     created: function () {
+      // 组件创建完后获取数据，
+      // 此时 data 已经被 observed 了
       this._getPageConfig()
     },
-    mounted: function () {
-//      let self = this
+    watch: {
+      // 如果路由有变化，会再次执行该方法
+      '$route': '_getPageConfig'
     },
     methods: {
       _getPageConfig () {
-        // page/:moduleName/:pageCode?
+        // 注意！！！
+        // 先切换到加载页面，若无该切换，操作this.currentView会保留在真正需打开的页面上
+        // 若该路由变化且this.currentView require的vue是同一个时，会导致页面不刷新，
+        // 就算路由的参数如id等变化也不刷新
+        this.currentView = require('./loading_page.vue')
+        // 路由的格式：page/:moduleName/:pageCode?query
         api.data.getPageConfig(this.$route.params.pageCode).then((res) => {
           console.debug('res>', res)
           if (res.code === '0') {

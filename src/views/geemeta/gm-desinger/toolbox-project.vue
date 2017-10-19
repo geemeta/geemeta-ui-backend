@@ -15,7 +15,8 @@
       ds: {id: '', name: ''}
     },
     data () {
-      return {}
+      return {
+      }
     },
     watch: {
       'ds': function (val, oval) {
@@ -27,6 +28,9 @@
         this.newTree(treeData)
 //        console.log(val, oval)
 //        console.log('entityNames>', entityNames)
+      },
+      'currentPageId': function (val, oval) {
+
       }
     },
     mounted: function () {
@@ -149,7 +153,7 @@
                   label: createIconLabel('重命名', 'edit'),
                   _disabled: false,
                   action: function (data) {
-                    $.jstree.reference(data.reference).edit(data.reference, undefined, self.editNode)
+                    $.jstree.reference(data.reference).edit(data.reference, undefined, self.updateNode)
                   }
                 },
                 remove: {
@@ -228,7 +232,7 @@
                 console.log('treeNode>', res.data)
                 let nodeId = $ref.create_node(data.reference, treeNode, 'last')
                 $ref.select_node(nodeId)
-                $ref.edit(nodeId, undefined, self.editNode)
+                $ref.edit(nodeId, undefined, self.updateNode)
                 if ($.isFunction(callback)) callback(nodeId)
               })
             }
@@ -245,7 +249,7 @@
         this.$emit('openPage', {id: obj.id, text: obj.text, type: obj.type})
         console.log('openPage with params >', {id: obj.id, text: obj.text, type: obj.type})
       },
-      editNode (node, status, cancelled) {
+      updateNode (node, status, cancelled) {
         if (cancelled) {
           return false
         }

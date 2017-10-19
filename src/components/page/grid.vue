@@ -107,7 +107,7 @@
                        data-target=".grid-sidebar">
                       <i class="fa fa-navicon fa-lg"></i>
                     </a>
-                    <span class="caption-subject font-green-sharp bold uppercase">用户信息</span>
+                    <span class="caption-subject font-green-sharp bold uppercase">{{opts.content.title}}</span>
                   </div>
                   <div class="actions">
 
@@ -169,6 +169,9 @@
                 <!-- end GRID HEAD -->
                 <div class="portlet-body">
                   <div class="row">
+                    <div v-if="opts.content.info" class="col-md-12 note note-info">
+                      <p>{{opts.content.info}}</p>
+                    </div>
                     <div class="col-md-12">
                       <!-- 去掉了table的display-->
                       <table id="geeGridOne"
@@ -236,6 +239,7 @@
         default: function () {
           return {
             content: {
+              title: 'opts.content.title',
               query: {
                 tree: {},
                 filter: {},

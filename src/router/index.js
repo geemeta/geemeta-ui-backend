@@ -78,10 +78,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // alert('router.beforeEach')
-  // console.debug('to', to)
-  // console.debug('from', from)
-  // console.debug('next', next)
-  console.debug('GM.profile().user', GM.profile().user)
+  // console.log('to', to)
+  // console.log('from', from)
+  // console.log('next', next)
+  // console.log('GM.profile().user', GM.profile().user)
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (GM.profile().user) {
       next()

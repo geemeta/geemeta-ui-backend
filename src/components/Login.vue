@@ -373,13 +373,6 @@
   export default {
     mounted () {
       Login().init()
-
-//      let user = this.$GM.isLogged()
-//      if (user) {
-//        console.debug('isLogged true')
-//      } else {
-//        console.debug('isLogged false')
-//      }
     },
     methods: {
       login: function () {
