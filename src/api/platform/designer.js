@@ -1,11 +1,11 @@
-class SecurityCfg {
+class DesignerCfg {
   constructor () {
     this.pageConfigs = [
       // 用户管理
       {
-        code: 'sys_user_list',
+        code: 'platform_dev_project',
         content: {
-          title: '用户信息',
+          title: '项目信息',
           component: 'grid',
           query: {
             tree: null,
@@ -74,45 +74,23 @@ class SecurityCfg {
           list: {
             select: {field: 'id', title: '', type: 'checkbox'},
             action: {
+              field: 'id',
               title: '操作',
-              options: [{title: '修改', click: 'open', disable: ':id > 0'},
-                {title: '详细', click: 'open', params: {pageCode: 'sys_role_list_detail', query: ''}},
-                {title: '直接调用js', click: 'javascript:alert(\'aaaa\')'}]
+              options: [{title: '修改', click: 'open', disable: ':id > 0'}, {title: '修改2', click: 'open'}, {
+                title: '详细',
+                click: 'javascript:alert(\'aaaa\')'
+              }, {title: '修改3', click: 'open'}]
             },
             columns: [
-              {field: 'id', title: '序号', visible: false},
-              {field: 'name', title: '名称', type: 'string', format: '', 'visible': false},
+              // {field: 'id', title: '', type: 'checkbox'},
+              {field: 'name', title: '名称', type: 'string', format: ''},
               {field: 'code', title: '编码', type: 'string', format: ''},
               {field: 'description', title: '描述', type: 'string', format: ''}
             ],
             p: '1,10',
             order: 'name|+'
           },
-          stat: '',
-          // 状态
-          state: {
-            selectedRows: {},
-            clickedRow: {}
-          }
-        }
-      },
-      // 角色详情
-      {
-        code: 'sys_role_list_detail',
-        content: {
-          title: '角色详情',
-          component: 'tab-view',
-          info: '',
-          state: {},
-          activeIndex: 1,
-          tabs: [
-            {title: '基本信息', html: '<p style="text-align: center">角色基本信息</p>', href: '', page: {}},
-            {title: '角色用户', html: '<p style="text-align: center">角色用户信息</p>', href: '', page: {pageCode: 'sys_role_ref_user_list', query: ''}},
-            {title: '角色权限', html: '<p style="text-align: center">角色权限清单</p>', href: 'http://www.baidu.com', page: {}}
-          ],
-          footer: {
-            action: {}
-          }
+          stat: ''
         }
       }
     ]
@@ -120,5 +98,5 @@ class SecurityCfg {
 
 }
 
-let instance = new SecurityCfg()
+let instance = new DesignerCfg()
 export default instance

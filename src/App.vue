@@ -1,9 +1,21 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <router-view></router-view>
+    <modal-view ref="appRootModalView"></modal-view>
+  </div>
 </template>
 
 <script>
-  export default {}
+  import api from './api/core'
+  import modalView from './components/page/modal-view.vue'
+
+  export default {
+
+    mounted: function () {
+      api.ctx.$root = this.$root
+    },
+    components: {modalView}
+  }
 </script>
 
 <style>
@@ -279,6 +291,13 @@
   }
 
   /* 紧凑样式compact 结束*/
+
+  .xg-iframe {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
 
   /* 重置bootstrap格式，解决bootstrap col 嵌套时，溢出的问题*/
   /*.row.xg-no-gutter [class^="col-"], .row.xg-no-gutter [class*="col-"] {*/

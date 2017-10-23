@@ -229,6 +229,7 @@
           return {
             content: {
               em: '',
+              rowId: 'id',
               query: {
                 tree: {},
                 filter: {},
@@ -382,7 +383,7 @@
             }
           },
           serverSide: true,
-          rowId: 'id',
+          rowId: self.opts.content.rowId,
           // save datatable state(pagination, sort, etc) in cookie.
 //        bStateSave: false,
           lengthMenu: [

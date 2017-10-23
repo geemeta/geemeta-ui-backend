@@ -1,3 +1,7 @@
+<!--
+  通用的加载页面，实现动态路由，通过currentView切换页面，并通过opts、query传递属性及查询参数给渲染的页面
+  注意：加载的页面，需存放于本page.vue所在目录下
+-->
 <template>
   <component v-bind:is="currentView" :opts="pageConfig" :query="query">
     <!-- 组件在 vm.currentview 变化时改变！ -->
@@ -29,7 +33,7 @@
         // 先切换到加载页面，若无该切换，操作this.currentView会保留在真正需打开的页面上
         // 若该路由变化且this.currentView require的vue是同一个时，会导致页面不刷新，
         // 就算路由的参数如id等变化也不刷新
-        this.currentView = require('./loading_page.vue')
+        this.currentView = require('./loading-page.vue')
         // 路由的格式：page/:moduleName/:pageCode?query
         api.data.getPageConfig(this.$route.params.pageCode).then((res) => {
           console.debug('res>', res)
@@ -47,6 +51,6 @@
     }
   }
 </script>
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<!-- 添加 'scoped' 属性，使该CSS只应用于本vue。 -->
 <style scoped>
 </style>

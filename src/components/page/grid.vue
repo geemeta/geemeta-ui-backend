@@ -110,7 +110,6 @@
                     <span class="caption-subject font-green-sharp bold uppercase">{{opts.content.title}}</span>
                   </div>
                   <div class="actions">
-
                     <div class="btn-group">
                       <button id="btn_new" class="btn green btn-circle btn-sm"> 新增
                         <i class="fa fa-plus"></i>
@@ -209,20 +208,20 @@
     </div>
     <!-- END CONTENT BODY -->
     <!--注意 不可用fade类似的动画，即不能用class="modal fade"，该动画会导致 vue component中的mounted事件未能按预设执行-->
-    <div class="modal" tabindex="-1">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title">标题</h4>
-      </div>
-      <div class="modal-body">
-        <component v-bind:is="modalView" :opts="modalOpts">
-        </component>
-      </div>
-      <div class="modal-footer">
-        <a href="#" data-dismiss="modal" class="btn btn-default">关闭</a>
-        <a href="#" class="btn btn-primary">保存</a>
-      </div>
-    </div>
+    <!--<div class="modal" tabindex="-1">-->
+    <!--<div class="modal-header">-->
+    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+    <!--<h4 class="modal-title">标题</h4>-->
+    <!--</div>-->
+    <!--<div class="modal-body">-->
+    <!--<component v-bind:is="modalView" :opts="modalOpts">-->
+    <!--</component>-->
+    <!--</div>-->
+    <!--<div class="modal-footer">-->
+    <!--<a href="#" data-dismiss="modal" class="btn btn-default">关闭</a>-->
+    <!--<a href="#" class="btn btn-primary">保存</a>-->
+    <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 <script>
@@ -266,9 +265,7 @@
         mixQuery: {},
         columns: [],
         lastGql: {},
-        tableRef: undefined,
-        modalView: undefined,
-        modalOpts: {}
+        tableRef: undefined
       }
     },
     beforeMount: function () {
@@ -282,6 +279,7 @@
           let col = self.opts.content.list.columns[i]
           cols[i] = {'data': col.field, title: col.title}
           cols[i].type = col.type
+          cols[i].visible = col.visible !== false
         }
         return cols
       }
@@ -292,6 +290,8 @@
     },
     methods: {
       _isRowBtnDisable (row, expression) {
+//        console.log('row:', row)
+//        console.log('expression:', expression)
         return 'disabled'
       },
       _initTree () {
@@ -365,7 +365,6 @@
           console.error('url中必须有参数：em')
           return
         }
-        var table = $('#geeGridOne')
         let tableBaseOptions = {
           language: {
             'aria': {
@@ -430,8 +429,8 @@
           data: function (param) {
             console.debug('grid request data >', param)
             // 动态设置url
-            // table.api().ajax.url('http://localhost:8080/api/meta/list?draw=' + param.draw)
-            table.api().ajax.url(api.url.getList(({draw: param.draw})))
+            // $table.api().ajax.url('http://localhost:8080/api/meta/list?draw=' + param.draw)
+            $table.api().ajax.url(api.url.getList(({draw: param.draw})))
             return JSON.stringify(self._genGql(self.lastMixQueryData))
           },
           error: function (e) {
@@ -445,20 +444,20 @@
 //          sClass: '',
           data: self.opts.content.list.select.field,
           render: function (data, type, full, meta) {
-            console.log('meta>', meta)
-            console.log('data>', data)
+//            console.log('meta>', meta)
+//            console.log('data>', data)
             let col = self.opts.content.list.action
             // 一个动作
             if (col.options.length === 1) {
-              // let obj = col.options[0]
-              // return '<li><a href="javascript:' + obj.click + '; class="btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
+              // let colOption = col.options[0]
+              // return '<li><a href="javascript:' + colOption.click + '; class="btn-xs"><i class="icon-detail"></i>' + colOption.title + '</a></li>'
             }
             // 多个动作，展示成下拉项方式
             let act = ''
             for (let i in col.options) {
-              let obj = col.options[i]
-              let sDisable = self._isRowBtnDisable(table.api().row(meta.row).data(), obj.disable)
-              act += '<li><a ' + sDisable + ' data-gm-action="' + obj.click + '" data-gm-row="' + meta.row + '" class="gm-action btn-xs"><i class="icon-detail"></i>' + obj.title + '</a></li>'
+              let colOption = col.options[i]
+              let sDisable = self._isRowBtnDisable($table.api().row(meta.row).data(), colOption.disable)
+              act += '<li><a ' + sDisable + ' data-gm-action="' + colOption.click + '" data-gm-title="' + colOption.title + '" data-gm-row="' + meta.row + '" class="gm-action btn-xs"><i class="icon-detail"></i>' + colOption.title + '</a></li>'
             }
             return '<div class="btn-group">' +
               '<button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> 更多 ' +
@@ -483,8 +482,9 @@
           },
           bSortable: false
         })
-        self.tableRef = table.dataTable(tableBaseOptions)
-        table.find('.group-checkable').change(function () {
+        var $table = $('#geeGridOne')
+        self.tableRef = $table.dataTable(tableBaseOptions)
+        $table.find('.group-checkable').change(function () {
           var set = $(this).attr('data-set')
           var checked = $(this).is(':checked')
           $(set).each(function () {
@@ -496,34 +496,47 @@
               $(this).parents('tr').removeClass('active')
             }
           })
+          // 选择的数据
+          console.log('select row data >', $table.api().rows('.active').data())
         })
-        table.on('change', 'tbody tr .checkboxes', function () {
+        $table.on('change', 'tbody tr .checkboxes', function () {
           $(this).parents('tr').toggleClass('active')
+          console.log('active rows ', $table.api().row('.active'))
         })
-//        table.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+//        $table.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
 //          console.log('Button ' + buttonApi.text() + ' was activated')
 //        })
         // 自定义列操作事件
-        // table.on('click', 'tbody tr a.gm-action', function (e) {
-        table.find('tbody tr a.gm-action').each(function (btn) {
-          $(btn).on('click', function (e) {
-            let $act = $(e.target)
-            let action = utils.trim($act.attr('data-gm-action'))
-            let rowIndex = $act.attr('data-gm-row')
-            if (action.indexOf('javascript:') === 0) {
-              // 执行自定义脚本
-              eval(action.replace('javascript:', ''))
-            } else {
-              // 调用专用函数,如打开窗口
-              self[action](table.api().row(rowIndex).data())
-            }
-          })
-          $(btn).addClass('')
+        $table.on('click', 'tbody tr a.gm-action', function (e) {
+          let $act = $(e.target)
+          let action = utils.trim($act.attr('data-gm-action'))
+          let actionTitle = utils.trim($act.attr('data-gm-title'))
+          let rowIndex = $act.attr('data-gm-row')
+          if (action.indexOf('javascript:') === 0) {
+            // 执行自定义脚本
+            eval(action.replace('javascript:', ''))
+          } else {
+            // 调用专用函数,如打开窗口
+            var activeActionOption = {}
+            self.opts.content.list.action.options.forEach(actionOption => {
+              if (actionOption.title === actionTitle) {
+                activeActionOption = actionOption
+                return
+              }
+            })
+            let data = {}
+            $.extend(data, activeActionOption.params)
+            $.extend(data, $table.api().row(rowIndex).data())
+            console.log('activeActionOption>', activeActionOption)
+            self[action](self, data)
+          }
         })
         // 初始化操作按钮
         $(self.$el).find('#btn_new').click(function () {
-          self.modalView = require('../base/tab-view.vue')
-          $(self.$el).find('.modal').modal()
+          api.ui.openVue(self, 'tab-view', {})
+//          console.log('self.$root>', self.$root)
+//          self.$root.modalView = require('./tab-view.vue')
+//          $(self.$el).find('.modal').modal()
         })
       },
       _genGql (queryData) {
@@ -551,8 +564,8 @@
         this.lastMixQueryData = data
         this.tableRef.api().draw()
       },
-      open (data) {
-        console.log('vue open method>', data)
+      open (srcVue, data) {
+        api.ui.openPage(srcVue, data.pageCode, data.query, data)
       }
     },
     components: {formQuery}

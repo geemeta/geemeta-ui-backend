@@ -113,7 +113,6 @@
       }
     },
     created: function () {
-      console.log(this.menuItems)
     }
   }
 </script>

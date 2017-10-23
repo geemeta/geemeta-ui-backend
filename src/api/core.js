@@ -4,11 +4,15 @@ import utils from '../common/utils'
 // import jsonp from '../common/jsonp'
 import securityCfg from './platform/securityCfg'
 
+/**
+ * 在使用之前需选设置$root {@link #ctx}
+ * @type {{data: {getPageConfig: core.data.getPageConfig, getPageConfig2: core.data.getPageConfig2, getFileTemplate: core.data.getFileTemplate, getPageByCode: core.data.getPageByCode, savePage: core.data.savePage, save: core.data.save, queryOne: core.data.queryOne}, url: {getList: core.url.getList, getPageConfig: core.url.getPageConfig}, ui: {openPage: core.ui.openPage, openVue: core.ui.openVue}, ctx: {$root: undefined}}}
+ */
 let core = {
   data: {
     /**
      * 通过页面id获取页面配置
-     * @param pageCode pageId
+     * @param pageCode pageCode
      * @returns {{}}
      */
     getPageConfig: function (pageCode) {
@@ -259,6 +263,40 @@ let core = {
     getPageConfig: function (options) {
       return ctx.url.api + '/page/' + utils.param(options)
     }
+  },
+  ui: {
+    /**
+     *
+     * @param pageCode 配置的页面
+     * @param query
+     * @param data
+     */
+    openPage: function (srcVue, pageCode, query, data) {
+      core.data.getPageConfig(pageCode).then(res => {
+        console.debug('res>', res)
+        var pageConfig = {}
+        if (res.code === '0') {
+          if (res.data) {
+            pageConfig = res.data
+          } else {
+            console.error('返回数据res.data为空！')
+          }
+        }
+        core.ui.openVue(srcVue, pageConfig.content.component, pageConfig, data)
+      })
+    },
+    openVue: function (srcVue, vueTemplate, vueConfig, vueData) {
+      console.log('vueTemplateName >', vueTemplate)
+      console.log('vueConfig >', vueConfig)
+      console.log('vueData >', vueData)
+      // $root对应App.vue的上线，srcVue.$root.$children[0]才对应APP.vue
+      Vue.set(srcVue.$root.$children[0].$refs.appRootModalView, 'modalBody', require('../components/page/' + vueTemplate + '.vue'))
+      Vue.set(srcVue.$root.$children[0].$refs.appRootModalView, 'modalOpts', vueConfig)
+      $('#app-root-modal').modal('show')
+    }
+  },
+  ctx: {
+    $root: undefined
   }
 }
 export default core

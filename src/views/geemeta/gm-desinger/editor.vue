@@ -15,7 +15,7 @@
                   <a href="javascript:;" @click="newProject"><i class="fa fa-folder">&nbsp;</i>新建项目</a>
                 </li>
                 <li>
-                  <a href="javascript:;"><i class="fa fa-folder-open">&nbsp;</i>打开项目</a>
+                  <a href="javascript:;" @click="openProject"><i class="fa fa-folder-open">&nbsp;</i>打开项目</a>
                 </li>
                 <li>
                   <a href="javascript:;"><i class="fa fa-file-code-o">&nbsp;</i>新建页面</a>
@@ -187,6 +187,11 @@
           self.ds.project = project
           console.log('save project>', res.data)
         })
+      },
+      openProject: function (mouseEvent) {
+        //        self.modalView = require('./tab-view.vue')
+//        $(self.$el).find('.modal').modal()
+        console.log('open project mouseEvent>', mouseEvent)
       },
       onSettingOpen: function (data) {
         $(this.$el).find('#designer-toolbox-setting-tabs a[href="#d-tab-attributes"]').tab('show')
