@@ -304,6 +304,13 @@
   /*padding-right: 0px;*/
   /*padding-left: 0px;*/
   /*}*/
+
+  /* 重置bootstrap格式*/
+  /*.modal-dialog {*/
+    /*width: 100%;*/
+    /*margin: auto auto;*/
+  /*}*/
+
   .xg-mix-no-mp {
     margin: 0;
     padding: 0

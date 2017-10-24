@@ -3,9 +3,14 @@
   注意：加载的页面，需存放于本page.vue所在目录下
 -->
 <template>
-  <component v-bind:is="currentView" :opts="pageConfig" :query="query">
-    <!-- 组件在 vm.currentview 变化时改变！ -->
-  </component>
+  <div class="page-content-wrapper">
+    <!-- .page-content内有：margin-left:xxx，导致整个页面右移，适合作为主页面的右移(左边有菜单)-->
+    <div class="page-content">
+      <component v-bind:is="currentView" :opts="pageConfig" :query="query">
+        <!-- 组件在 vm.currentview 变化时改变！ -->
+      </component>
+    </div>
+  </div>
 </template>
 <script>
   import api from '../../api/core'

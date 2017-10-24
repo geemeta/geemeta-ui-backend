@@ -189,8 +189,8 @@
         })
       },
       openProject: function (mouseEvent) {
-        //        self.modalView = require('./tab-view.vue')
-//        $(self.$el).find('.modal').modal()
+        //  openVue: function (srcVue, vueTemplate, vueConfig, vueData) {
+        core.ui.openPage(this, 'platform_dev_project_list_select', null, {})
         console.log('open project mouseEvent>', mouseEvent)
       },
       onSettingOpen: function (data) {

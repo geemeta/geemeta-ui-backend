@@ -1,3 +1,5 @@
+// import staticCfgManager from '../staticCfgManager'
+
 class SecurityCfg {
   constructor () {
     this.pageConfigs = [
@@ -6,6 +8,7 @@ class SecurityCfg {
         code: 'sys_user_list',
         content: {
           title: '用户信息',
+
           component: 'grid',
           query: {
             tree: null,
@@ -59,7 +62,9 @@ class SecurityCfg {
         content: {
           title: '角色信息',
           component: 'grid',
+          entity: 'sys_role',
           query: {
+            hide: true,
             tree: null,
             filter: null,
             mix: {
@@ -71,6 +76,7 @@ class SecurityCfg {
             }
           },
           info: '',
+          selected: '',
           list: {
             select: {field: 'id', title: '', type: 'checkbox'},
             action: {
@@ -81,7 +87,7 @@ class SecurityCfg {
             },
             columns: [
               {field: 'id', title: '序号', visible: false},
-              {field: 'name', title: '名称', type: 'string', format: '', 'visible': false},
+              {field: 'name', title: '名称', type: 'string', format: ''},
               {field: 'code', title: '编码', type: 'string', format: ''},
               {field: 'description', title: '描述', type: 'string', format: ''}
             ],
@@ -107,8 +113,13 @@ class SecurityCfg {
           activeIndex: 1,
           tabs: [
             {title: '基本信息', html: '<p style="text-align: center">角色基本信息</p>', href: '', page: {}},
-            {title: '角色用户', html: '<p style="text-align: center">角色用户信息</p>', href: '', page: {pageCode: 'sys_role_ref_user_list', query: ''}},
-            {title: '角色权限', html: '<p style="text-align: center">角色权限清单</p>', href: 'http://www.baidu.com', page: {}}
+            {
+              title: '角色用户',
+              html: '<p style="text-align: center">角色用户信息</p>',
+              href: '',
+              page: {pageCode: 'sys_role_ref_user_list', query: ''}
+            },
+            {title: '角色权限', html: '<p style="text-align: center">角色权限清单</p>', href: '', page: {}}
           ],
           footer: {
             action: {}
@@ -121,4 +132,5 @@ class SecurityCfg {
 }
 
 let instance = new SecurityCfg()
+// staticCfgManager.register(instance)
 export default instance
